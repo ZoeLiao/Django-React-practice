@@ -4,6 +4,14 @@ Django + React
 
 ## Django
 ### How to build
+
+####
+- `export PYTHONPATH=$PWD`
+
+####
+- `python manage.py makemigrations game`
+- `python manage.py migrate game`
+
 - [Django REST framework](https://www.django-rest-framework.org/)
 
 ## Reference
