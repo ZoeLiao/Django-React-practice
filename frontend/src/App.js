@@ -1,30 +1,9 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
+import axios from "axios";
 
-
-const TESTED = 1
-const UNTESTED = 0
-
-const wordItems = [
-  {
-    id: 1,
-    word: "Apple",
-    meaning: "A red fruit",
-    test_status: TESTED, 
-  },
-  {
-	id: 2,
-	word: "Banana",
-	meaning: "A yellow fruit",
-	test_status: UNTESTED, 
-  },
-  {
-	id: 3,
-	word: "Cat",
-	meaning: "A kind of animal which sleep a lot, so that it is called neko in Japanese",
-	test_status: UNTESTED, 
-  },
-];
+const TESTED = 0
+const UNTESTED = -1
 
 
 class App extends Component {
@@ -32,7 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       viewTested: TESTED,
-      wordList: wordItems,
+      wordList: [],
       modal: false,
 	  activeItem: {
 	  	title: "",
@@ -41,6 +20,20 @@ class App extends Component {
 	  },
     };
   }
+
+  componentDidMount() {
+    this.refreshList();
+  }
+
+  refreshList = () => {
+    axios
+      .get("http://localhost:8000/api/words/")
+      .then(res =>
+          this.setState({ wordList: res.data },
+          ()=>{console.log(this.state.wordList)})
+      )
+      .catch(err => console.log(err));
+  };
 
   displayTested = status => {
     if (status) {
@@ -100,7 +93,7 @@ class App extends Component {
   renderItems = () => {
     const { viewTested } = this.state;
     const newItems = this.state.wordList.filter(
-      item => item.test_status == viewTested
+      item => item.test_status === viewTested
     );
     return newItems.map(item => (
       <li
