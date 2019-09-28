@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
 
-const TESTED = 0
+const TESTED = 1
 const UNTESTED = -1
 
 
@@ -37,9 +37,9 @@ class App extends Component {
 
   displayTested = status => {
     if (status) {
-      return this.setState({ viewTested: true });
+      return this.setState({ viewTested: TESTED });
     }
-    return this.setState({ viewTested: false });
+    return this.setState({ viewTested: UNTESTED });
   };
 
   toggle = () => {
@@ -76,13 +76,13 @@ class App extends Component {
       <div className="my-5 tab-list">
         <span
           onClick={() => this.displayTested(true)}
-          className={this.state.viewTested ? "active" : ""}
+          className={this.state.viewTested === TESTED ? "active" : ""}
         >
           Tested
         </span>
         <span
           onClick={() => this.displayTested(false)}
-          className={this.state.viewTested ? "" : "active"}
+          className={this.state.viewTested === UNTESTED ? "active" : ""}
         >
           Untested
         </span>
@@ -101,9 +101,6 @@ class App extends Component {
         className="list-group-item d-flex justify-content-between align-items-center"
       >
         <span
-          className={`word-title mr-2 ${
-            this.state.viewTested ? "tested-word" : ""
-          }`}
           title={item.meaning}
         >
           {item.word}
