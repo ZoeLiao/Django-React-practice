@@ -27,7 +27,7 @@ class App extends Component {
 
   refreshList = () => {
     axios
-      .get("http://localhost:8000/api/words/")
+      .get("/api/words/")
       .then(res =>
           this.setState({ wordList: res.data },
           ()=>{console.log(this.state.wordList)})
@@ -52,7 +52,9 @@ class App extends Component {
   };
 
   handleDelete = item => {
-  	alert("delete" + JSON.stringify(item));
+      axios
+          .delete(`/api/words/${item.id}`)
+          .then(res => this.refreshList());
   };
 
   createItem = () => {
