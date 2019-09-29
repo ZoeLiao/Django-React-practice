@@ -14,9 +14,9 @@ class App extends Component {
       wordList: [],
       modal: false,
 	  activeItem: {
-	  	title: "",
-	  	description: "",
-	  	completed: false
+	    word: "",
+	    meaning: "",
+	    test_status: -1
 	  },
     };
   }
@@ -48,13 +48,21 @@ class App extends Component {
 
   handleSubmit = item => {
 	this.toggle();
-	alert("save" + JSON.stringify(item));
+    if (item.id) {
+      axios
+        .put(`/api/words/${item.id}/`, item)
+        .then(res => this.refreshList());
+        return;
+    }
+    axios
+      .post("/api/words/", item)
+      .then(res => this.refreshList());
   };
 
   handleDelete = item => {
-      axios
-          .delete(`/api/words/${item.id}`)
-          .then(res => this.refreshList());
+    axios
+      .delete(`/api/words/${item.id}`)
+      .then(res => this.refreshList());
   };
 
   createItem = () => {
@@ -68,7 +76,7 @@ class App extends Component {
 
   displayCompleted = status => {
   	if (status) {
-  		return this.setState({ viewCompleted: true });
+  	  return this.setState({ viewCompleted: true });
   	}
   	return this.setState({ viewCompleted: false });
   };

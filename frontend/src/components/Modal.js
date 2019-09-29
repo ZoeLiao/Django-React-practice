@@ -40,7 +40,7 @@ export default class CustomModal extends Component {
               <Input
                 type="text"
                 name="vocabulory"
-                value={this.state.activeItem.title}
+                value={this.state.activeItem.word}
                 onChange={this.handleChange}
                 placeholder="Enter a Vocabulary Word"
               />
@@ -50,7 +50,7 @@ export default class CustomModal extends Component {
               <Input
                 type="text"
                 name="meaning"
-                value={this.state.activeItem.description}
+                value={this.state.activeItem.meaning}
                 onChange={this.handleChange}
                 placeholder="Enter Meanings"
               />
@@ -60,7 +60,7 @@ export default class CustomModal extends Component {
                 <Input
                   type="checkbox"
                   name="completed"
-                  checked={this.state.activeItem.completed}
+                  checked={this.state.activeItem.test_status}
                   onChange={this.handleChange}
                 />
                 Remembered
