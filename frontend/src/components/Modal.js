@@ -10,6 +10,7 @@ import {
   Input,
   Label
 } from "reactstrap";
+import * as Constants from "./Const";
 
 export default class CustomModal extends Component {
   constructor(props) {
@@ -36,10 +37,10 @@ export default class CustomModal extends Component {
         <ModalBody>
           <Form>
             <FormGroup>
-              <Label for="vocabulory">Vocabulary Word</Label>
+              <Label for="word">Vocabulary Word</Label>
               <Input
                 type="text"
-                name="vocabulory"
+                name="word"
                 value={this.state.activeItem.word}
                 onChange={this.handleChange}
                 placeholder="Enter a Vocabulary Word"
@@ -55,16 +56,13 @@ export default class CustomModal extends Component {
                 placeholder="Enter Meanings"
               />
             </FormGroup>
-            <FormGroup check>
-              <Label for="completed">
-                <Input
-                  type="checkbox"
-                  name="completed"
-                  checked={this.state.activeItem.test_status}
-                  onChange={this.handleChange}
-                />
-                Remembered
-              </Label>
+            <FormGroup>
+              <Label for="test_status">Test Status</Label>
+                <Input type="select" name="test_status" onChange={this.handleChange} value={this.state.activeItem.test_status}>
+                  <option value={ Constants.UNTESTED }>Untested</option>
+                  <option value={ Constants.FAMILIAR }>Familiar</option>
+                  <option value={ Constants.REMEMBERED }>Remembered</option>
+                </Input>
             </FormGroup>
           </Form>
         </ModalBody>

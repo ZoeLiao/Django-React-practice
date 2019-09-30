@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
-
-const TESTED = 1
-const UNTESTED = -1
+import * as Constants from "./components/Const";
 
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewTested: TESTED,
+      viewTested: Constants.UNTESTED,
       wordList: [],
       modal: false,
 	  activeItem: {
@@ -36,10 +34,7 @@ class App extends Component {
   };
 
   displayTested = status => {
-    if (status) {
-      return this.setState({ viewTested: TESTED });
-    }
-    return this.setState({ viewTested: UNTESTED });
+    return this.setState({ viewTested: status });
   };
 
   toggle = () => {
@@ -66,7 +61,7 @@ class App extends Component {
   };
 
   createItem = () => {
-  	const item = { title: "", description: "", completed: false };
+  	const item = { word: "", meaning: "", test_status: false };
   	this.setState({ activeItem: item, modal: !this.state.modal });
   };
 
@@ -85,14 +80,20 @@ class App extends Component {
     return (
       <div className="my-5 tab-list">
         <span
-          onClick={() => this.displayTested(true)}
-          className={this.state.viewTested === TESTED ? "active" : ""}
+          onClick={() => this.displayTested(Constants.REMEMBERED)}
+          className={this.state.viewTested === Constants.REMEMBERED ? "active" : ""}
         >
-          Tested
+          Remembered
         </span>
         <span
-          onClick={() => this.displayTested(false)}
-          className={this.state.viewTested === UNTESTED ? "active" : ""}
+          onClick={() => this.displayTested(Constants.FAMILIAR)}
+          className={this.state.viewTested === Constants.FAMILIAR ? "active" : ""}
+        >
+          Familiar
+        </span>
+        <span
+          onClick={() => this.displayTested(Constants.UNTESTED)}
+          className={this.state.viewTested === Constants.UNTESTED ? "active" : ""}
         >
           Untested
         </span>

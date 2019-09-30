@@ -10,8 +10,6 @@ class WordSerializer(serializers.ModelSerializer):
             'word',
             'meaning',
             'language',
-            'examples',
-            'notes',
             'test_status',
             'test_number'
         )
