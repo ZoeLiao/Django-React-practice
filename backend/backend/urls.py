@@ -27,6 +27,7 @@ router.register(r'words', views.WordView, 'word')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('users/register/', views.UserRegistrationAPIView.as_view()),
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
 ]
