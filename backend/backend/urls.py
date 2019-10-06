@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('users/', views.UserList.as_view()),
+    path('current_user/', views.get_current_user),
     #path('users/<int:pk>/', views.UserDetail.as_view()),
     path('user/login/', views.UserLoginAPIView.as_view()),
     path('user/register/', views.UserRegistrationAPIView.as_view()),

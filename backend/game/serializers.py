@@ -2,15 +2,16 @@ import arrow
 import jwt
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from rest_framework import serializers
+from rest_framework import serializers as sz
+from rest_framework_jwt.settings import api_settings
 
 from game.models import Word
 
 
-class WordSerializer(serializers.ModelSerializer):
+class WordSerializer(sz.ModelSerializer):
     class Meta:
         model = Word
         fields = (
@@ -23,21 +24,32 @@ class WordSerializer(serializers.ModelSerializer):
         )
 
 
-UserModel = get_user_model()
+class GetFullUserSerializer(sz.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username','is_superuser','first_name', 'last_name')
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(sz.ModelSerializer):
 
     # do not show password
-    password = serializers.CharField(write_only=True)
+    password = sz.CharField(write_only=True)
+    token = sz.SerializerMethodField()
+
+    def get_token(self, object):
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+        payload = jwt_payload_handler(object)
+        token = jwt_encode_handler(payload)
+        return token 
 
     def create(self, validated_data):
         username = validated_data['username']
         email = validated_data['email']
-        user_qs = UserModel.objects.filter(username=username)
+        user_qs = User.objects.filter(username=username)
         if user_qs:
-            raise forms.ValidationError("This username has been already registered")
+            raise forms.ValidationError('This username has been already registered')
 
-        user = UserModel.objects.create(
+        user = User.objects.create(
             username=username,
             email=email
         )
@@ -47,53 +59,5 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     class Meta:
-        model = UserModel
-        fields = ( "id", "username", "email", "password", )
-
-
-class UserLoginSerializer(serializers.ModelSerializer):
-    token = serializers.CharField(allow_blank=True, read_only=True)
-    username = serializers.CharField()
-    email = serializers.EmailField()
-    password = serializers.CharField()
-    class Meta:
-        model = UserModel
-        fields = [
-	    'username',
-	    'email',
-            'password',
-            'token',
-        ]
-        extra_kwargs = {
-            "password":
-            {"write_only": True}
-        }
-
-    def validate(self, data):
-        user_obj = None
-        email = data.get('email', None)
-        username = data.get('username', None)
-        password = data.get('password', None)
-        if not username:
-            raise ValidationError("A username or email is required to login.")
-        user_qs = UserModel.objects.filter(
-            Q(email=email) |
-            Q(username=username)
-            ).distinct()
-        user_qs = user_qs.exclude(email__isnull=True).exclude(email__iexact="")
-        if user_qs.exists() and user_qs.count() == 1:
-            user_obj = user_qs.first()
-        else:
-            raise ValidationError("This username/email is not valid.")
-
-        if user_obj:
-            if not user_obj.check_password(password):
-                raise ValidationError("Incorrent credentials please try again.")
-        payload = {
-            'username': username,
-            'iat': arrow.now().timestamp,
-            'exp': arrow.now().shift(minutes=5).timestamp
-        }
-        jwt_token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256').decode('utf-8')
-        data['jwt_token'] = jwt_token
-        return data
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'token')
