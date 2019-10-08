@@ -45,5 +45,11 @@ Migrate the database
 - `python manage.py makemigrations game`
 - `python manage.py migrate game`
 
+## Login with JWT:
+- [/user/login/](/user/login/)
+- Method: 'POST'
+- Headers: {"Authorization": "JWT <your jwt_token>"}
+
 ## Reference
 - [Build a To-Do application Using Django and React](https://scotch.io/tutorials/build-a-to-do-application-using-django-and-react#toc-setting-up-the-apis)
+- [Building An API With Django 2.0](https://tag1consulting.com/blog/building-api-django-20-part-i)
