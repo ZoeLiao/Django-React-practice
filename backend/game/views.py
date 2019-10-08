@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework.status import (
     HTTP_200_OK,
@@ -30,7 +30,8 @@ from rest_framework.views import APIView
 from game.models import Word
 from game.serializers import (
     WordSerializer,
-    UserSerializer,
+    UserRegisterSerializer,
+    UserLoginSerializer,
 )
 
 
@@ -40,37 +41,24 @@ class WordView(viewsets.ModelViewSet):
     queryset = Word.objects.all()
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
-def get_current_user(request):
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data)
-
-
-UserModel = get_user_model()
-
-class UserList(ListAPIView):
-    queryset= UserModel.objects.all()
-    serializer_class = UserSerializer
-
 class UserRegistrationAPIView(CreateAPIView):
-    model = get_user_model()
+    model = User
     # let anon users register
     permission_classes = [
         AllowAny
     ]
-    serializer_class = UserSerializer
+    serializer_class = UserRegisterSerializer
 
 
 class UserLoginAPIView(APIView):
     permission_classes = [
         AllowAny
     ]
-    serializer_class = UserSerializer
+    serializer_class = UserLoginSerializer
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        serializer = UserSerializer(data=data)
+        serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             new_data = serializer.data
             return Response(new_data, status=HTTP_200_OK)

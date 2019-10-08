@@ -29,18 +29,11 @@ class GetFullUserSerializer(sz.ModelSerializer):
         model = User
         fields = ('username','is_superuser','first_name', 'last_name')
 
-class UserSerializer(sz.ModelSerializer):
+class UserRegisterSerializer(sz.ModelSerializer):
 
     # do not show password
     password = sz.CharField(write_only=True)
     token = sz.SerializerMethodField()
-
-    def get_token(self, object):
-        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-        payload = jwt_payload_handler(object)
-        token = jwt_encode_handler(payload)
-        return token 
 
     def create(self, validated_data):
         username = validated_data['username']
@@ -55,9 +48,57 @@ class UserSerializer(sz.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
-
         return user
+
+
+class UserLoginSerializer(sz.ModelSerializer):
+    token = sz.CharField(allow_blank=True, read_only=True)
+    username = sz.CharField()
+    email = sz.EmailField()
+    password = sz.CharField()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'token')
+        fields = [
+	    'username',
+	    'email',
+            'password',
+            'token',
+        ]
+        extra_kwargs = {
+            "password":
+            {"write_only": True}
+        }
+
+    def validate(self, data):
+        user_obj = None
+        email = data.get('email', None)
+        username = data.get('username', None)
+        password = data.get('password', None)
+        if not username:
+            raise ValidationError("A username or email is required to login.")
+        user_qs = User.objects.filter(
+            Q(email=email) |
+            Q(username=username)
+            ).distinct()
+        user_qs = user_qs.exclude(email__isnull=True).exclude(email__iexact="")
+        if user_qs.exists() and user_qs.count() == 1:
+            user_obj = user_qs.first()
+        else:
+            raise ValidationError("This username/email is not valid.")
+
+        if user_obj:
+            if not user_obj.check_password(password):
+                raise ValidationError("Incorrent credentials please try again.")
+        payload = {
+            'username': username,
+            'iat': arrow.now().timestamp,
+            'exp': arrow.now().shift(minutes=5).timestamp
+        }
+
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+        payload = jwt_payload_handler(user_obj)
+        token = jwt_encode_handler(payload)
+        data['token'] = token
+        return data
