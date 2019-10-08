@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from game import views
 
 
@@ -25,5 +26,9 @@ router.register(r'words', views.WordView, 'word')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('user/login/', obtain_jwt_token),
+    path('user/register/', views.UserRegistrationAPIView.as_view()),
+    path('user/refresh_token/', refresh_jwt_token),
+    path('user/logout/', views.UserLogoutAllView.as_view()),
 ]
