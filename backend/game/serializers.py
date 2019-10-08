@@ -1,14 +1,14 @@
 import arrow
 import jwt
+import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from rest_framework import serializers as sz
 from rest_framework_jwt.settings import api_settings
 
-from game.models import Word
+from game.models import Word, User
 
 
 class WordSerializer(sz.ModelSerializer):
@@ -24,16 +24,10 @@ class WordSerializer(sz.ModelSerializer):
         )
 
 
-class GetFullUserSerializer(sz.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username','is_superuser','first_name', 'last_name')
-
 class UserRegisterSerializer(sz.ModelSerializer):
 
     # do not show password
     password = sz.CharField(write_only=True)
-    token = sz.SerializerMethodField()
 
     def create(self, validated_data):
         username = validated_data['username']
@@ -44,15 +38,23 @@ class UserRegisterSerializer(sz.ModelSerializer):
 
         user = User.objects.create(
             username=username,
-            email=email
+            email=email,
         )
         user.set_password(validated_data['password'])
         user.save()
         return user
 
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'username',
+            'password',
+        )
+
 
 class UserLoginSerializer(sz.ModelSerializer):
-    token = sz.CharField(allow_blank=True, read_only=True)
     username = sz.CharField()
     email = sz.EmailField()
     password = sz.CharField()

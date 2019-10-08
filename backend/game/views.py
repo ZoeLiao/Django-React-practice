@@ -1,8 +1,10 @@
-from django.contrib.auth.models import User
+import uuid
 from django.shortcuts import render
+from game.models import User
 from rest_framework.status import (
     HTTP_200_OK,
-    HTTP_400_BAD_REQUEST
+    HTTP_204_NO_CONTENT,
+    HTTP_400_BAD_REQUEST,
 )
 
 from rest_framework import (
@@ -63,3 +65,11 @@ class UserLoginAPIView(APIView):
             new_data = serializer.data
             return Response(new_data, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+class UserLogoutAllView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user.jwt_secret = uuid.uuid4()
+        user.save()
+        return Response(status=HTTP_204_NO_CONTENT)

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import arrow
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -132,14 +132,22 @@ CORS_ALLOW_CREDENTIALS = True
 # AUTHENTICATION
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        # default: rest_framework.permissions.IsAuthenticated
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
-SECRET_KEY = 'test_local'
+SECRET_KEY = "test_dev"
+
+# JWT settings
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_GET_USER_SECRET_KEY': 'game.utils.jwt.get_secret_key',
+}
+
+AUTH_USER_MODEL = 'game.User'
