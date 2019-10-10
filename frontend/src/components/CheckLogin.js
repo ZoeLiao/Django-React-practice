@@ -1,4 +1,5 @@
-mport {Component} from 'react';
+import {Component} from 'react';
+import axios from "axios";
 import {withRouter} from 'react-router-dom'
 
 @withRouter
@@ -8,7 +9,6 @@ class CheckLogin extends Component {
             .then(res => {
                 if(res.status === 200) {
                     if(res.data.code === 0) {
-
                     }else {
                         this.props.history.push('/user/login/')
                     }

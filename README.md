@@ -53,3 +53,4 @@ Migrate the database
 ## Reference
 - [Build a To-Do application Using Django and React](https://scotch.io/tutorials/build-a-to-do-application-using-django-and-react#toc-setting-up-the-apis)
 - [Building An API With Django 2.0](https://tag1consulting.com/blog/building-api-django-20-part-i)
+- [https://chentsulin.github.io/redux/index.html](https://chentsulin.github.io/redux/index.html)
