@@ -1,16 +1,45 @@
 import React, {Component} from 'react'
+import {Redirect} from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import {register} from './../redux/user.redux'
+import {connect} from 'react-redux';
 
+
+@connect(
+    state => state,
+    {register}
+)
 class Register extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            email: '',
+            username: '',
+            password: '',
+            pwdConfirm: '',
+        }
+        this.handleChange = this.handleChange.bind(this);
         this.handleGoLogin = this.handleGoLogin.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
     };
+
+    handleChange(e) {
+        const property = e.target.name;
+        const value = e.target.value;
+        this.setState({
+            [property]: value
+        });
+        console.log(this.state)
+    }
 
     handleGoLogin() {
         this.props.history.push('/login');
     }
+
+	handleRegister() {
+	    this.props.register(this.state)
+	}
 
     render() {
         return (
@@ -23,27 +52,32 @@ class Register extends Component {
 			    <Form>
 			      <Form.Group controlId="formBasicEmail">
 			    	<Form.Label>Email address</Form.Label>
-			    	<Form.Control type="email" placeholder="Enter email" />
+			    	<Form.Control type="email" placeholder="Enter email" name="email" onChange={this.handleChange}/>
 			    	<Form.Text className="text-muted">
 			    	  We'll never share your email with anyone else.
 			    	</Form.Text>
 			      </Form.Group>
 
+			      <Form.Group controlId="formBasicUsername">
+			    	<Form.Label>User Name</Form.Label>
+			    	<Form.Control placeholder="Enter username" name="username" onChange={this.handleChange}/>
+			      </Form.Group>
+
 			      <Form.Group controlId="formBasicPassword">
 			    	<Form.Label>Password</Form.Label>
-			    	<Form.Control type="password" placeholder="Password" />
+			    	<Form.Control type="password" placeholder="Enter password" name="password" onChange={this.handleChange}/>
 			      </Form.Group>
 
 			      <Form.Group controlId="formConfirmPassword">
 			    	<Form.Label>Password Confirmation</Form.Label>
-			    	<Form.Control type="password" placeholder="Password" />
+			    	<Form.Control type="password" placeholder="Enter password" name="pwdConfirm" onChange={this.handleChange}/>
 			      </Form.Group>
 
 			      <Form.Group controlId="formBasicCheckbox">
 			    	<Form.Check type="checkbox" label="Check me out" />
 			      </Form.Group>
-                  <span class="mr-3">
-			        <Button variant="primary" type="submit">
+                  <span className="mr-3">
+			        <Button variant="primary" type="submit" onClick={this.handleRegister}>
 			          Submit
 			        </Button>
                   </span>
@@ -55,10 +89,14 @@ class Register extends Component {
                   </span>
 			    </Form>
 
+				{this.props.user.redirectTo ? <Redirect to={this.props.user.redirectTo}></Redirect>:null}
+				<div className="err-show">{this.props.user.msg ? this.props.user.msg : ''}</div>
+
               </div>
             </div>
           </div>
         </main>
+
     )
 }
 }
