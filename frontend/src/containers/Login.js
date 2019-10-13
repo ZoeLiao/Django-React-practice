@@ -48,7 +48,7 @@ class Login extends Component {
 			    	<Form.Control type="password" placeholder="Password" />
 			      </Form.Group>
 
-                  <span class="mr-3">
+                  <span className="mr-3">
 			        <Button variant="primary" type="submit">
 			          Submit
 			        </Button>

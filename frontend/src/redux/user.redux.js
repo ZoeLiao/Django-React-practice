@@ -1,4 +1,3 @@
-import { createStore } from 'redux';
 import axios from 'axios';
 import {REGISTER_SUCCESS, REGISTER_FAILURE} from './../components/Const';
 
@@ -25,6 +24,7 @@ let initState = {
     isLogin: false
 }
 
+// reducer: (previousState, action) => newState
 export function user(state=initState, action) {
     switch (action.type) {
        case REGISTER_SUCCESS:
@@ -36,6 +36,7 @@ export function user(state=initState, action) {
     }
 }
 
+// action creator
 function registerFail(msg) {
     return {
         msg,
@@ -43,6 +44,7 @@ function registerFail(msg) {
     }
 }
 
+// action creator
 function registerSuccess(data) {
     return {
         data,
@@ -50,14 +52,14 @@ function registerSuccess(data) {
     }
 }
 
-// register 是 action creator，返回的 action 供 reducer user 使用，從而改變 state
-export function register({email, username, password, pwdConfirm}) {
+export function register(dispatch, {email, username, password, pwdConfirm}) {
+    alert('dispatch', dispatch)
     alert('email', email, username, password, pwdConfirm)
     if(!email || !username || !password) {
-        registerFail('賬號密碼不能為空')
+        return dispatch(registerFail('賬號、用戶名、或密碼不能為空'))
     }
     if(password !== pwdConfirm) {
-        registerFail('兩次密碼不一致')
+        return dispatch(registerFail('兩次密碼不一致'))
     }
     return dispatch => {
         axios.post('/user/register/',{email, username, password})

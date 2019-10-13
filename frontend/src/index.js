@@ -10,7 +10,9 @@ import thunk from 'redux-thunk'
 // createStore接受reducer生成stote compose合併生成store其他資料 applyMiddleware接受thunk解決redux非同步問題
 import {createStore, compose, applyMiddleware} from 'redux'
 
-// Provider負責傳遞store
+// Provider
+// 接收上方在 Redux 中創建的 store，
+// 並根據和 component 綁在一起的需求單 mapStateToProps 上要求的資料從 store 中取出，再透過 props 流向 component
 import {Provider} from 'react-redux'
 
 // 引入react-router-dom各種路由元素
@@ -27,10 +29,15 @@ import App from './containers/App'
 // 生成store
 import reducer from './reducer'
 
+// 每個專案都應該只能有一個 store 存在
+// 若是有許多不同類型的資料，則是以 Reducer 區分
 const store = createStore(reducer, compose(
-    applyMiddleware(thunk), //解決redux非同步問題
+    // @param {Function} [enhancer] store enhancer
+    // 解決redux非同步問題
+    applyMiddleware(thunk),
     window.devToolsExtension ? window.devToolsExtension() : f => f // chrome控制檯redux工具
 ))
+console.log(store.getState())
 
 // 頁面渲染
 ReactDOM.render(

@@ -7,8 +7,10 @@ import {connect} from 'react-redux';
 
 
 @connect(
+    // 從 store 提取的 state
     state => state,
-    {register}
+	// actionsCreater
+	{register}
 )
 class Register extends Component {
     constructor(props) {
@@ -22,6 +24,7 @@ class Register extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleGoLogin = this.handleGoLogin.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
+        console.log(this.props)
     };
 
     handleChange(e) {
@@ -38,6 +41,8 @@ class Register extends Component {
     }
 
 	handleRegister() {
+        console.log(this.props)
+		alert(this.props.register)
 	    this.props.register(this.state)
 	}
 
@@ -76,6 +81,9 @@ class Register extends Component {
 			      <Form.Group controlId="formBasicCheckbox">
 			    	<Form.Check type="checkbox" label="Check me out" />
 			      </Form.Group>
+
+				  <div className="mb-2" style={{color:"red"}}>{this.props.user ? this.props.user.msg : ''}</div>
+
                   <span className="mr-3">
 			        <Button variant="primary" type="submit" onClick={this.handleRegister}>
 			          Submit
@@ -88,9 +96,6 @@ class Register extends Component {
 			        </Button>
                   </span>
 			    </Form>
-
-				{this.props.user.redirectTo ? <Redirect to={this.props.user.redirectTo}></Redirect>:null}
-				<div className="err-show">{this.props.user.msg ? this.props.user.msg : ''}</div>
 
               </div>
             </div>
