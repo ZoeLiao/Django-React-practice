@@ -9,8 +9,9 @@ import {connect} from 'react-redux';
 @connect(
     // 從 store 提取的 state
     state => state,
-	// actionsCreater
-	{register}
+    // Defining mapDispatchToProps As An Object: { action creator }
+    // props.dispatch(() => register()) to props.register()
+    {register}
 )
 class Register extends Component {
     constructor(props) {
@@ -42,7 +43,6 @@ class Register extends Component {
 
 	handleRegister() {
         console.log(this.props)
-		alert(this.props.register)
 	    this.props.register(this.state)
 	}
 
