@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Modal from "./components/Modal";
+import Modal from "./../components/Modal";
 import axios from "axios";
-import * as Constants from "./components/Const";
+import * as Constants from "./../components/Const";
 
 
 class App extends Component {
