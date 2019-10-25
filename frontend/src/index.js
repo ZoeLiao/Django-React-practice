@@ -37,7 +37,7 @@ const store = createStore(reducer, compose(
     applyMiddleware(thunk),
     window.devToolsExtension ? window.devToolsExtension() : f => f // chrome控制檯redux工具
 ))
-console.log(store.getState())
+console.log('store', store.getState())
 
 // 頁面渲染
 ReactDOM.render(

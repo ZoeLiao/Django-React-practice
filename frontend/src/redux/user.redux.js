@@ -38,28 +38,28 @@ export function user(state=initState, action) {
 
 // action creator
 function registerFail(msg) {
+    // return action
     return {
         msg,
-        type: REGISTER_FAILURE
+        type: REGISTER_FAILURE,
     }
 }
 
 // action creator
 function registerSuccess(data) {
+    // return action
     return {
         data,
-        type: REGISTER_SUCCESS
+        type: REGISTER_SUCCESS,
     }
 }
 
-export function register(dispatch, {email, username, password, pwdConfirm}) {
-    alert('dispatch', dispatch)
-    alert('email', email, username, password, pwdConfirm)
+export function register({email, username, password, pwdConfirm}) {
     if(!email || !username || !password) {
-        return dispatch(registerFail('賬號、用戶名、或密碼不能為空'))
+        return registerFail('賬號、用戶名、或密碼不能為空')
     }
     if(password !== pwdConfirm) {
-        return dispatch(registerFail('兩次密碼不一致'))
+        return registerFail('兩次密碼不一致')
     }
     return dispatch => {
         axios.post('/user/register/',{email, username, password})

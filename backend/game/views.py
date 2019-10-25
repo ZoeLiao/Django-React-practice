@@ -39,6 +39,9 @@ from game.serializers import (
 
 # viewsets: provides the implementation for CRUD
 class WordView(viewsets.ModelViewSet):
+    permission_classes = [
+        AllowAny
+    ]
     serializer_class = WordSerializer
     queryset = Word.objects.all()
 
