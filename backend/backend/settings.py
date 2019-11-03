@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'game',
     'corsheaders',
     'rest_framework',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -122,10 +123,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 # CORS
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
 
 CORS_ALLOW_CREDENTIALS = True
 

@@ -1,6 +1,7 @@
 import uuid
 from django.shortcuts import render
-from game.models import User
+from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_204_NO_CONTENT,
@@ -35,6 +36,7 @@ from game.serializers import (
     UserRegisterSerializer,
     UserLoginSerializer,
 )
+from game.models import User
 
 
 # viewsets: provides the implementation for CRUD
@@ -71,6 +73,10 @@ class UserLoginAPIView(APIView):
 
 class UserLogoutAllView(APIView):
     permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_summary='Logout',
+    )
     def post(self, request, *args, **kwargs):
         user = request.user
         user.jwt_secret = uuid.uuid4()
