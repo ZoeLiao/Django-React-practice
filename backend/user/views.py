@@ -61,7 +61,6 @@ class UserRegistrationAPIView(CreateAPIView):
             res = FAILURE
             res['cause'] = str(e)
 
-        print('@@@', res)
         return JsonResponse(res)
 
 

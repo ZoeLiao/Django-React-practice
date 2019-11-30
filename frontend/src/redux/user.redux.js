@@ -28,7 +28,6 @@ let initState = {
 export function user(state=initState, action) {
     switch (action.type) {
        case REGISTER_SUCCESS:
-            alert('####', 'login!')
             return {...state, ...action.data, msg: '', redirectTo: '/login'}
        case REGISTER_FAILURE:
             return {...state, msg: action.msg}
@@ -63,24 +62,17 @@ export function register({email, username, password, pwdConfirm}) {
         return registerFail('兩次密碼不一致')
     }
     return dispatch => {
-        axios.post('/user/register/',{
+        axios.post('/api/user/register/',{
             'email': email,
             'username': username,
             'password': password
         })
             .then(res => {
-                alert('123');
-                console.log('@@@@', res.data);
-                alert('123');
-                //if(res.status === 200 && res.data.code === SUCCESS) {
-                //    console.log('####', res.data)
-                //    alert('@@@@')
-                //    dispatch(registerSuccess(res.data.data))
-                //}else {
-                //    console.log('####', res.data)
-                //    alert('@@@@@@', res)
-                //    dispatch(registerFail(res.data.msg))
-                //}
+                if(res.status === 200 && res.data.code === SUCCESS) {
+                    dispatch(registerSuccess(res.data.data))
+                }else {
+                    dispatch(registerFail(res.data.msg))
+                }
             }
         )
     }
