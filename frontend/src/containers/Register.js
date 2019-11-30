@@ -82,6 +82,8 @@ class Register extends Component {
 			    	<Form.Check type="checkbox" label="Check me out" />
 			      </Form.Group>
 
+                  {this.props.user.redirectTo ? <Redirect to={this.props.user.redirectTo}></Redirect>:null}
+
 				  <div className="mb-2" style={{color:"red"}}>{this.props.user ? this.props.user.msg : ''}</div>
 
                   <span className="mr-3">
