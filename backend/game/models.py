@@ -1,6 +1,4 @@
-import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django_mysql.models import ListTextField
 
 from game.utils.const import EN
@@ -15,10 +13,3 @@ class Word(models.Model):
 
     def __str__(self):
         return self.word
-
-
-class User(AbstractUser):
-    jwt_secret = models.UUIDField(default=uuid.uuid4)
-
-    class Meta(AbstractUser.Meta):
-        pass

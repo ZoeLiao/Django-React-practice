@@ -26,7 +26,7 @@ SECRET_KEY = '6gkcf-c=9e)ag76hw7u4dq)6j(0t3jy1_)v9so8cv0mocw-az3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'game',
+    'user',
     'corsheaders',
     'rest_framework',
     'drf_yasg'
@@ -155,4 +156,4 @@ JWT_AUTH = {
     'JWT_GET_USER_SECRET_KEY': 'game.utils.jwt.get_secret_key',
 }
 
-AUTH_USER_MODEL = 'game.User'
+AUTH_USER_MODEL = 'user.User'

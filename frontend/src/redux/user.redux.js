@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {REGISTER_SUCCESS, REGISTER_FAILURE} from './../components/Const';
+import {REGISTER_SUCCESS, REGISTER_FAILURE, SUCCESS} from './../components/Const';
 
 /**
  * 這是一個 reducer，一個有 (state, action) => state signature 的 pure function。
@@ -62,9 +62,13 @@ export function register({email, username, password, pwdConfirm}) {
         return registerFail('兩次密碼不一致')
     }
     return dispatch => {
-        axios.post('/user/register/',{email, username, password})
+        axios.post('/api/user/register/',{
+            'email': email,
+            'username': username,
+            'password': password
+        })
             .then(res => {
-                if(res.status === 200 && res.data.code === 0) {
+                if(res.status === 200 && res.data.code === SUCCESS) {
                     dispatch(registerSuccess(res.data.data))
                 }else {
                     dispatch(registerFail(res.data.msg))

@@ -12,7 +12,7 @@ class Login extends Component {
 
     login = () => {
       axios
-        .get("/user/login/")
+        .get("/api/program/assets?page=1&page_size=1")
         .then(res => {
                 if(res['token']) {
                     this.props.history.push('/register');
